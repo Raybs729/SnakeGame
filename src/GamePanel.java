@@ -61,8 +61,8 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
     public void newApple(){
-        appleX = random.nextInt(SCREEN_WIDTH/UNIT_SIZE)*UNIT_SIZE; //we divide so it makes it only able to go into boxes
-        appleY = random.nextInt(SCREEN_HEIGHT/UNIT_SIZE)*UNIT_SIZE;
+        appleX = random.nextInt((int)SCREEN_WIDTH/UNIT_SIZE)*UNIT_SIZE; //we divide so it makes it only able to go into boxes
+        appleY = random.nextInt((int)SCREEN_HEIGHT/UNIT_SIZE)*UNIT_SIZE;
 
     }
     public void move(){
@@ -76,10 +76,13 @@ public class GamePanel extends JPanel implements ActionListener {
                 break;
             case 'D':
                 y[0] = y[0] + UNIT_SIZE;
+                break;
             case 'L':
                 x[0] = x[0] - UNIT_SIZE; //goes left
+                break;
             case 'R':
                 x[0] = x[0] + UNIT_SIZE; //goes right
+                break;
 
         }
 
@@ -128,6 +131,28 @@ public class GamePanel extends JPanel implements ActionListener {
     public class MyKeyAdapter extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e){
+            switch(e.getKeyCode()){
+            case KeyEvent.VK_LEFT:
+                if(direction != 'R'){
+                    direction = 'L';
+                }
+                break;
+            case KeyEvent.VK_RIGHT:
+                if(direction != 'L'){
+                    direction = 'R';
+                }
+                break;
+            case KeyEvent.VK_UP:
+                if(direction != 'D'){
+                    direction = 'U';
+                }
+                break;
+            case KeyEvent.VK_DOWN:
+                if(direction != 'U'){
+                    direction = 'D';
+                }
+                break;
+            }
 
         }
     }
