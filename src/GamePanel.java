@@ -22,15 +22,32 @@ public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
     Random random;
     public GamePanel(){
+        random = new Random();
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+        this.setBackground(Color.BLACK);
+        this.setFocusable(true);
+        this.addKeyListener(new MyKeyAdapter());
+        startGame();
 
     }
     public void startGame(){
-
+        newApple(); //creates new apple on screen
+        running = true; // its originally false meaning game is off
+        timer = new Timer(DELAY, this); //this because we are using the action listener interface
+        timer.start();
     }
     public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        draw(g); //this draws the grid lines. gridlines wouldn't appear without this line
 
     }
-    public void draw (Graphics g){
+    public void draw (Graphics g) {
+        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) { //this will make the grid
+            g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+            g.drawLine(0, i * UNIT_SIZE, i * SCREEN_WIDTH, i * UNIT_SIZE);
+        }
+    }
+    public void newApple(){
 
     }
     public void move(){
