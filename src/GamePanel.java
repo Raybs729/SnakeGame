@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleX; //x coordinate where apple is located. will appear randomly
     int appleY; //y position of apple
     char direction = 'R';
-    boolean running = false;
+    boolean running = false; // we set running to false because game is not on
     Timer timer;
     Random random;
     public GamePanel(){
@@ -42,22 +42,30 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void draw (Graphics g) {
-        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) { //this will make the grid
-            g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i * UNIT_SIZE, i * SCREEN_WIDTH, i * UNIT_SIZE);
-        }
-        g.setColor(Color.red);
-        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+        if(running) {
+//            for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) { //this will make the grid
+//                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+//                g.drawLine(0, i * UNIT_SIZE, i * SCREEN_WIDTH, i * UNIT_SIZE);
+//            }
+            g.setColor(Color.red);
+            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
-        for(int i = 0; i < bodyParts; i++){
-            if(i == 0){
-                g.setColor(Color.green);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            for (int i = 0; i < bodyParts; i++) {
+                if (i == 0) {
+                    g.setColor(Color.green);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                } else {
+                    g.setColor(new Color(45, 180, 0));
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
             }
-            else {
-                g.setColor(new Color(45,180,0));
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-            }
+            g.setColor(Color.red);
+            g.setFont(new Font("Impact", Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+ applesEaten))/2, g.getFont().getSize()); // this puts the font
+        }
+        else {
+            gameOver(g);
         }
     }
     public void newApple(){
@@ -71,23 +79,27 @@ public class GamePanel extends JPanel implements ActionListener {
             y[i] = y[i-1];
         }
         switch (direction){
-            case 'U':
-                y[0] = y[0] - UNIT_SIZE; //going to next position
-                break;
-            case 'D':
-                y[0] = y[0] + UNIT_SIZE;
-                break;
-            case 'L':
-                x[0] = x[0] - UNIT_SIZE; //goes left
-                break;
-            case 'R':
-                x[0] = x[0] + UNIT_SIZE; //goes right
-                break;
-
+        case 'U':
+            y[0] = y[0] - UNIT_SIZE; //going to next position
+            break;
+        case 'D':
+            y[0] = y[0] + UNIT_SIZE;
+            break;
+        case 'L':
+            x[0] = x[0] - UNIT_SIZE; //goes left
+            break;
+        case 'R':
+            x[0] = x[0] + UNIT_SIZE; //goes right
+            break;
         }
 
     }
     public void checkApple(){
+        if((x[0] == appleX) && (y[0] == appleY)) {
+            bodyParts++;
+            applesEaten++;
+            newApple();
+        }
 
     }
     public void checkCollisions(){
@@ -103,7 +115,7 @@ public class GamePanel extends JPanel implements ActionListener {
         if (x[0] > SCREEN_WIDTH) { //check head touches right border
             running = false;
         }
-        if (y[0] > 0) { //check head touches top border
+        if (y[0] < 0) { //check head touches top border
             running = false;
         }
         if (y[0] > SCREEN_HEIGHT) { //check head touches bottom border
@@ -115,6 +127,17 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void gameOver(Graphics g){
+        g.setColor(Color.red);
+        g.setFont(new Font("Impact", Font.BOLD, 40));
+        FontMetrics metrics1 = getFontMetrics(g.getFont());
+        g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Score: "+ applesEaten))/2, g.getFont().getSize()); // this puts the font
+
+
+        g.setColor(Color.red);
+        g.setFont(new Font("Impact", Font.BOLD, 75));
+        FontMetrics metrics2 = getFontMetrics(g.getFont());
+        g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2); // this puts the font
+        // in the middle of the screen
 
     }
 
